@@ -1,13 +1,15 @@
-import React from 'react';
-import { useTable } from 'react-table';
+import React, { useMemo } from 'react';
+import { useTable, useSortBy } from 'react-table';
 
 import { Column } from "react-table";
+
+import './react-table-config.d.ts';
 
 import Data from '../../mockups/Data.json';
 
 const Table = () => {
   const data = Data;
-  const columns: Column<typeof data[0]>[] = [
+  const columns: Column<typeof data[0]>[] = useMemo(() => [
     {
       "Header": "Name",
       "accessor": "name"
@@ -23,14 +25,27 @@ const Table = () => {
     {
       "Header": "Email",
       "accessor": "email"
-    }  
-  ]
+    },
+    {
+      "Header": "Phones",
+      "columns": [
+        {
+          "Header": "Phone1",
+          "accessor" : "phone1"
+        },
+        {
+          "Header": "Phone2",
+          "accessor" : "phone2"
+        }
+      ]
+    }
+  ], [])
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow } = useTable({ columns, data })
+    prepareRow } = useTable({ columns, data }, useSortBy)
  
   return (
     <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
@@ -38,7 +53,7 @@ const Table = () => {
         {headerGroups.map(headerGroup => (
           <tr {...headerGroup.getHeaderGroupProps()}>
           {headerGroup.headers.map(column => (
-            <th {...column.getHeaderProps()}
+            <th {...column.getHeaderProps(column.getSortByToggleProps())}
               style={{
                 borderBottom: 'solid 3px red',
                 background: 'aliceblue',
@@ -46,6 +61,13 @@ const Table = () => {
                 fontWeight: 'bold',
               }}>
               {column.render('Header')}
+              <span>
+                {column.isSorted
+                ? column.isSortedDesc
+                  ? '🔽'
+                  : '🔼'
+                : ''}
+             </span>
             </th>))}
           </tr>))}
       </thead>

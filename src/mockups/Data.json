@@ -3,18 +3,24 @@
     "name": "Joanna",
     "surname": "Rabat",
     "age" : "20",
-    "email" : "j.rabat@tmail.com"
+    "email" : "j.rabat@tmail.com",
+    "phone1" : "333333333",
+    "phone2" : "343434343"
   },
   { 
     "name": "Marianna",
     "surname": "Marzec",
     "age" : "35",
-    "email" : "marianna.marzec@tmail.com"
+    "email" : "marianna.marzec@tmail.com",
+    "phone1" : "444444444",
+    "phone2" : "434343434"
   },
   { 
     "name": "Jan",
     "surname": "Zbędny",
     "age" : "15",
-    "email" : "j.zbedny123@tmail.com"
+    "email" : "j.zbedny123@tmail.com",
+    "phone1" : "555555555",
+    "phone2" : "333333333"
   }
 ]
