@@ -1,0 +1,35 @@
+[
+  {
+    "Header": "Nr.",
+    "accessor": "orderNo",
+    "sticky" : "left"
+  },
+  {
+    "Header": "Name",
+    "accessor": "name",
+    "width": "50"
+  }, 
+  {
+    "Header": "Surname",
+    "accessor": "surname",
+    "width": "50"
+  },  
+  {
+    "Header": "Age",
+    "accessor": "age",
+    "width": "50"
+  },       
+  {
+    "Header": "Phones",
+    "columns": [
+      {
+        "Header": "Phone 1.",
+        "accessor": "phone1"
+      },
+      {
+        "Header": "Phone 2.",
+        "accessor": "phone2"
+      }
+    ]
+  }
+]

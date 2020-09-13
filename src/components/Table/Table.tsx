@@ -1,101 +1,151 @@
-import React, { useMemo } from 'react';
-import { useTable, useSortBy } from 'react-table';
+import React, { useMemo } from "react";
+import { useBlockLayout, useSortBy, useTable } from "react-table";
+import { useSticky } from "react-table-sticky";
+import styled from "styled-components";
 
-import { Column } from "react-table";
-
-import './react-table-config.d.ts';
-
+import Columns from '../../mockups/Columns.json';
 import Data from '../../mockups/Data.json';
 
-const Table = () => {
-  const data = Data;
-  const columns: Column<typeof data[0]>[] = useMemo(() => [
-    {
-      "Header": "Name",
-      "accessor": "name"
-    },
-    {
-      "Header": "Surname",
-      "accessor": "surname"
-    },
-    {
-      "Header": "Age",
-      "accessor": "age"
-    },
-    {
-      "Header": "Email",
-      "accessor": "email"
-    },
-    {
-      "Header": "Phones",
-      "columns": [
-        {
-          "Header": "Phone1",
-          "accessor" : "phone1"
-        },
-        {
-          "Header": "Phone2",
-          "accessor" : "phone2"
+const Styles = styled.div`
+  padding: 1rem;
+
+  .table {
+    border: 1px solid #ddd;
+
+    .tr {
+      :last-child {
+        .td {
+          border-bottom: 0;
         }
-      ]
+      }
     }
-  ], [])
+
+    .th,
+    .td {
+      padding: 5px;
+      border-bottom: 1px solid #ddd;
+      border-right: 1px solid #ddd;
+      background-color: #fff;
+      overflow: hidden;
+
+      :last-child {
+        border-right: 0;
+      }
+
+      .resizer {
+        display: inline-block;
+        width: 5px;
+        height: 100%;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transform: translateX(50%);
+        z-index: 1;
+
+        &.isResizing {
+          background: red;
+        }
+      }
+    }
+
+    &.sticky {
+      overflow: scroll;
+
+      .header {
+        position: sticky;
+        z-index: 1;
+        width: fit-content;
+        top: 0;
+      }
+
+      .body {
+        position: relative;
+        z-index: 0;
+      }
+
+      [data-sticky-td] {
+        position: sticky;
+      }
+    }
+  }
+`;
+
+function TableElement({ columns, data } : any) {
+  const defaultColumn = useMemo(
+    () => ({
+      minWidth: 150,
+      width: 150,
+      maxWidth: 400
+    }),
+    []
+  );
+
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     rows,
-    prepareRow } = useTable({ columns, data }, useSortBy)
- 
-  return (
-    <table {...getTableProps()} style={{ border: 'solid 1px blue' }}>
-      <thead>
-        {headerGroups.map(headerGroup => (
-          <tr {...headerGroup.getHeaderGroupProps()}>
-          {headerGroup.headers.map(column => (
-            <th {...column.getHeaderProps(column.getSortByToggleProps())}
-              style={{
-                borderBottom: 'solid 3px red',
-                background: 'aliceblue',
-                color: 'black',
-                fontWeight: 'bold',
-              }}>
-              {column.render('Header')}
-              <span>
-                {column.isSorted
-                ? column.isSortedDesc
-                  ? '🔽'
-                  : '🔼'
-                : ''}
-             </span>
-            </th>))}
-          </tr>))}
-      </thead>
-      <tbody {...getTableBodyProps()}>
-      {rows.map(row => {
-        prepareRow(row)
-          return (
-            <tr {...row.getRowProps()}>
-              {row.cells.map(cell => {
-                return (
-                  <td
-                    {...cell.getCellProps()}
-                    style={{
-                      padding: '10px',
-                      border: 'solid 1px gray',
-                      background: 'papayawhip',
-                    }}
-                  >
-                    {cell.render('Cell')}
-                  </td>
-                )
-              })}
-            </tr>
-          )
-        })}
-      </tbody>
-    </table>
+    prepareRow
+  } = useTable(
+    {
+      columns,
+      data,
+      defaultColumn
+    },
+    useBlockLayout,
+    useSortBy,
+    useSticky
   );
+
+  return (
+    <Styles>
+      <div
+        {...getTableProps()}
+        className="table sticky"
+        style={{ width: 800 }}
+      >
+        <div className="header">
+          {headerGroups.map(headerGroup => (
+            <div {...headerGroup.getHeaderGroupProps()} className="tr">
+              {headerGroup.headers.map(column => (
+                <div {...column.getHeaderProps(column.getSortByToggleProps())} className="th">
+                  {column.render("Header")}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <div {...getTableBodyProps()} className="body">
+          {rows.map((row, i) => {
+            prepareRow(row);
+            return (
+              <div {...row.getRowProps()} className="tr">
+                {row.cells.map(cell => {
+                  return (
+                    <div {...cell.getCellProps()} className="td">
+                      {cell.render("Cell")}
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </Styles>
+  );
+}
+
+export const Table = () => {
+  const columns = useMemo(
+    () => Columns,
+    []
+  );
+
+  const data = useMemo(() => Data, []);
+
+  return <TableElement columns={columns} data={data} />;
 }
 
 export default Table;
