@@ -1,8 +1,14 @@
 [
   {
-    "Header": "Nr.",
-    "accessor": "orderNo",
-    "sticky" : "left"
+    "Header": " ",
+    "sticky" : "left",
+    "columns" : [
+      {
+        "Header": "Nr.",
+        "accessor": "orderNo",
+        "sticky" : "left"
+      }
+    ]
   },
   {
     "Header": "Name",
